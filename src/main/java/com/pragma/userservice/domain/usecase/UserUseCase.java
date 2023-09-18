@@ -36,9 +36,7 @@ public class UserUseCase implements IUserServicePort {
             throw new DataAlreadyExistsException("User with email " + userModel.getEmail() + " already exists");
         }
         RoleModel roleModel = rolePersistencePort.findById(2L);
-        if(roleModel==null){
-            throw new DataNotFoundException("Role not found");
-        }
+        if(roleModel==null){throw new DataNotFoundException("Role not found");}
         userModel.setRole(roleModel);
         userModel.setPassword(passwordEncryptionPort.encode(userModel.getPassword()));
 
