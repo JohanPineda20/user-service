@@ -2,6 +2,7 @@ package com.pragma.userservice.domain.usecase;
 
 import com.pragma.userservice.domain.api.IUserServicePort;
 import com.pragma.userservice.domain.exception.DataAlreadyExistsException;
+import com.pragma.userservice.domain.exception.DataNotFoundException;
 import com.pragma.userservice.domain.exception.DomainException;
 import com.pragma.userservice.domain.model.RoleModel;
 import com.pragma.userservice.domain.model.UserModel;
@@ -35,6 +36,9 @@ public class UserUseCase implements IUserServicePort {
             throw new DataAlreadyExistsException("User with email " + userModel.getEmail() + " already exists");
         }
         RoleModel roleModel = rolePersistencePort.findById(2L);
+        if(roleModel==null){
+            throw new DataNotFoundException("Role not found");
+        }
         userModel.setRole(roleModel);
         userModel.setPassword(passwordEncryptionPort.encode(userModel.getPassword()));
 
