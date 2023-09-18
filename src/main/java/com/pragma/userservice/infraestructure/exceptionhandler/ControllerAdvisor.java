@@ -2,6 +2,7 @@ package com.pragma.userservice.infraestructure.exceptionhandler;
 
 import com.pragma.userservice.domain.exception.DataAlreadyExistsException;
 import com.pragma.userservice.domain.exception.DataNotFoundException;
+import com.pragma.userservice.domain.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -35,5 +36,10 @@ public class ControllerAdvisor {
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleDataNotFoundException(DataNotFoundException dataNotFoundException){
         return new ResponseEntity<>(Collections.singletonMap(MESSAGE, dataNotFoundException.getMessage()),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DomainException.class)
+    public ResponseEntity<Map<String, String>> handleDomainException(DomainException domainException){
+        return new ResponseEntity<>(Collections.singletonMap(MESSAGE, domainException.getMessage()),HttpStatus.CONFLICT);
     }
 }

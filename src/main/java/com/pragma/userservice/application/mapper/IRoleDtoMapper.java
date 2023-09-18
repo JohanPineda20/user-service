@@ -8,7 +8,8 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE,
+@Mapper(componentModel = "spring",
+        unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IRoleDtoMapper {
 RoleModel mapToRoleModel(RoleRequest roleRequest);

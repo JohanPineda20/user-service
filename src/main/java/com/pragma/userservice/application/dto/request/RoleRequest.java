@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class RoleRequest {
-    @NotBlank(message="Name cannot be empty")
+    @NotBlank(message = "Name cannot be empty")
     private String name;
     private String description;
 }

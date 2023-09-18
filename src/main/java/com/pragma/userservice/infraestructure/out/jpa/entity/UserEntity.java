@@ -13,16 +13,15 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String lastname;
-    @Column(nullable = false, unique = true)
+    @Column(name = "document_number", nullable = false, unique = true)
     private String documentNumber;
     @Column(nullable = false)
     private String cellphone;
@@ -32,6 +31,7 @@ public class UserEntity {
     private String email;
     @Column(nullable = false)
     private String password;
+
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
     private RoleEntity role;

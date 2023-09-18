@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-14T12:06:27-0500",
+    date = "2023-09-18T15:58:29-0500",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 19.0.2 (Oracle Corporation)"
 )
 @Component
@@ -38,13 +38,13 @@ public class IRoleDtoMapperImpl implements IRoleDtoMapper {
 
         List<RoleResponse> list = new ArrayList<RoleResponse>( roleModelList.size() );
         for ( RoleModel roleModel : roleModelList ) {
-            list.add( roleModelToRoleResponseDto( roleModel ) );
+            list.add( roleModelToRoleResponse( roleModel ) );
         }
 
         return list;
     }
 
-    protected RoleResponse roleModelToRoleResponseDto(RoleModel roleModel) {
+    protected RoleResponse roleModelToRoleResponse(RoleModel roleModel) {
         if ( roleModel == null ) {
             return null;
         }
