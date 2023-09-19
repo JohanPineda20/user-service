@@ -1,6 +1,7 @@
 package com.pragma.userservice.infraestructure.input.rest;
 
 import com.pragma.userservice.application.dto.request.UserRequest;
+import com.pragma.userservice.application.dto.response.UserResponse;
 import com.pragma.userservice.application.handler.IUserHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @Tag(name = "User Controller")
 @RestController
 @RequestMapping("/user")
@@ -37,5 +36,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> findById(@PathVariable Long id){
+        return ResponseEntity.ok(userHandler.findById(id));
+    }
 
 }

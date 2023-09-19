@@ -43,6 +43,13 @@ public class UserUseCase implements IUserServicePort {
         userPersistencePort.save(userModel);
     }
 
+    @Override
+    public UserModel findById(Long id) {
+        UserModel userModel = userPersistencePort.findById(id);
+        if(userModel==null) throw new DataNotFoundException("User not found");
+        return userModel;
+    }
+
 
     private int calculateAge(LocalDate birthdate){
         return LocalDate.now().getYear()-birthdate.getYear();

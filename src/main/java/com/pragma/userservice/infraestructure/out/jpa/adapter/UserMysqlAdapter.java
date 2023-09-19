@@ -25,4 +25,9 @@ public class UserMysqlAdapter implements IUserPersistencePort {
     public void save(UserModel userModel) {
         userRepository.save(userEntityMapper.mapToUserEntity(userModel));
     }
+
+    @Override
+    public UserModel findById(Long id) {
+        return userEntityMapper.mapToUserModel(userRepository.findById(id).orElse(null));
+    }
 }

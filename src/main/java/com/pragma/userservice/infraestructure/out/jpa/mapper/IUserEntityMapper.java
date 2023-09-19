@@ -10,4 +10,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IUserEntityMapper {
     UserEntity mapToUserEntity(UserModel userModel);
+    UserModel mapToUserModel(UserEntity userEntity);
 }
