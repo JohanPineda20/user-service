@@ -15,6 +15,6 @@ public interface IUserDtoMapper {
             dateFormat = "dd/MM/yyyy")
     UserModel mapToUserModel(UserRequest userRequest);
 
-    @Mapping(target = "rol", source = "rol.name")
+    @Mapping(target = "role", source = "role.name")
     UserResponse mapToUserResponse(UserModel userModel);
 }

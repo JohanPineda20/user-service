@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-18T19:52:23-0500",
+    date = "2023-09-19T10:30:25-0500",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -36,6 +36,27 @@ public class IUserEntityMapperImpl implements IUserEntityMapper {
         return userEntity;
     }
 
+    @Override
+    public UserModel mapToUserModel(UserEntity userEntity) {
+        if ( userEntity == null ) {
+            return null;
+        }
+
+        UserModel userModel = new UserModel();
+
+        userModel.setId( userEntity.getId() );
+        userModel.setName( userEntity.getName() );
+        userModel.setLastname( userEntity.getLastname() );
+        userModel.setDocumentNumber( userEntity.getDocumentNumber() );
+        userModel.setCellphone( userEntity.getCellphone() );
+        userModel.setBirthdate( userEntity.getBirthdate() );
+        userModel.setEmail( userEntity.getEmail() );
+        userModel.setPassword( userEntity.getPassword() );
+        userModel.setRole( roleEntityToRoleModel( userEntity.getRole() ) );
+
+        return userModel;
+    }
+
     protected RoleEntity roleModelToRoleEntity(RoleModel roleModel) {
         if ( roleModel == null ) {
             return null;
@@ -48,5 +69,19 @@ public class IUserEntityMapperImpl implements IUserEntityMapper {
         roleEntity.setDescription( roleModel.getDescription() );
 
         return roleEntity;
+    }
+
+    protected RoleModel roleEntityToRoleModel(RoleEntity roleEntity) {
+        if ( roleEntity == null ) {
+            return null;
+        }
+
+        RoleModel roleModel = new RoleModel();
+
+        roleModel.setId( roleEntity.getId() );
+        roleModel.setName( roleEntity.getName() );
+        roleModel.setDescription( roleEntity.getDescription() );
+
+        return roleModel;
     }
 }

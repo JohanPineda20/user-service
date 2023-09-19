@@ -1,6 +1,7 @@
 package com.pragma.userservice.domain.usecase;
 
 import com.pragma.userservice.domain.exception.DataAlreadyExistsException;
+import com.pragma.userservice.domain.exception.DataNotFoundException;
 import com.pragma.userservice.domain.exception.DomainException;
 import com.pragma.userservice.domain.model.RoleModel;
 import com.pragma.userservice.domain.model.UserModel;
@@ -69,6 +70,23 @@ class UserUseCaseTest {
         assertThrows(DomainException.class, () -> userUseCase.save(userModel));
         verify(userPersistencePort, never()).save(userModel);
     }
+
+    @Test
+    void findById(){
+        UserModel userModel = createExampleUser();
+        when(userPersistencePort.findById(1L)).thenReturn(userModel);
+
+        UserModel userModel1 = userUseCase.findById(1L);
+
+        assertEquals(userModel, userModel1);
+        assertDoesNotThrow(()->userUseCase.findById(1L));
+    }
+
+    @Test
+    void findByIdUserNotFound(){
+        assertThrows(DataNotFoundException.class,()->userUseCase.findById(1L));
+    }
+
     private UserModel createExampleUser(){
         UserModel userModel = new UserModel();
         userModel.setName("Johan");
