@@ -31,7 +31,6 @@ public class ControllerAdvisor {
     @ExceptionHandler(DataAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleDataAlreadyExistsException(DataAlreadyExistsException dataAlreadyExistsException){
         return new ResponseEntity<>(Collections.singletonMap(MESSAGE, dataAlreadyExistsException.getMessage()),HttpStatus.CONFLICT);
-        //return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap(MESSAGE, dataAlreadyExistsException.getMessage()));
     }
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleDataNotFoundException(DataNotFoundException dataNotFoundException){
