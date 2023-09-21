@@ -5,6 +5,8 @@ import com.pragma.userservice.domain.exception.DataNotFoundException;
 import com.pragma.userservice.domain.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -40,5 +42,15 @@ public class ControllerAdvisor {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<Map<String, String>> handleDomainException(DomainException domainException){
         return new ResponseEntity<>(Collections.singletonMap(MESSAGE, domainException.getMessage()),HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException usernameNotFoundException){
+        return new ResponseEntity<>(Collections.singletonMap(MESSAGE, usernameNotFoundException.getMessage()),HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException authenticationException){
+        return new ResponseEntity<>(Collections.singletonMap(MESSAGE, authenticationException.getMessage()),HttpStatus.UNAUTHORIZED);
     }
 }
