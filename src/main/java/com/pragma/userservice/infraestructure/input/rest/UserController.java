@@ -38,7 +38,7 @@ public class UserController {
 
     @Operation(summary = "Get an user by its id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get an user", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Get an user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception"))),
     })
     @GetMapping("/{id}")

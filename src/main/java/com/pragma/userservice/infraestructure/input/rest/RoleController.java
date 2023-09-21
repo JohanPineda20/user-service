@@ -40,7 +40,7 @@ public class RoleController {
 
     @Operation(summary = "Get all roles")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get all roles", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleRequest.class)))),
+            @ApiResponse(responseCode = "200", description = "Get all roles", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))),
             @ApiResponse(responseCode = "404", description = "Role not found", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception"))),
     })
     @GetMapping
@@ -49,7 +49,7 @@ public class RoleController {
     }
     @Operation(summary = "Delete a role")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User deleted from database", content = @Content),
+            @ApiResponse(responseCode = "204", description = "Role deleted from database", content = @Content),
             @ApiResponse(responseCode = "404", description = "Role not found", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception"))),
     })
     @DeleteMapping("/{id}")
