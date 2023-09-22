@@ -64,6 +64,7 @@ public class UserUseCase implements IUserServicePort {
     private Long validateRole(UserModel userModel) {
         if(userModel.getRole().getId() != null){
             if(userModel.getRole().getId() == 3L && getRolFromSecurityContext().equals("OWNER")) return 3L;
+            if(userModel.getRole().getId() == 4L && getRolFromSecurityContext().equals("ROLE_ANONYMOUS")) return 4L;
             throw new DomainException("Operation not allowed. You can't create an user " + (userModel.getRole().getId() == 3L ? "EMPLOYEE" : userModel.getRole().getId() == 4L ? "CUSTOMER" : userModel.getRole().getId() == 1L ? "ADMIN" : userModel.getRole().getId() == 2L ? "OWNER" : "because that role not exists"));
         }
         if(getRolFromSecurityContext().equals("ADMIN")) return 2L;

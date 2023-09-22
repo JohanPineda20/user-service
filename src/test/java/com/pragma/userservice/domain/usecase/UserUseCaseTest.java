@@ -150,6 +150,24 @@ class UserUseCaseTest {
         verify(userPersistencePort, times(1)).save(userModel);
         verify(restaurantFeignClientPort, times(1)).saveRestaurantEmployee(1L, userModel1.getId());
     }
+    @Test
+    void saveCustomer() {
+        RoleModel roleModel = new RoleModel();
+        roleModel.setId(4L);
+        UserModel userModel = createExampleUser();
+        userModel.setRole(roleModel);
+        when(passwordEncryptionPort.encode(userModel.getPassword())).thenReturn("password");
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("ROLE_ANONYMOUS");
+        RoleModel roleModel1 = createExampleRole(4L);
+        when(rolePersistencePort.findById(4L)).thenReturn(roleModel1);
+
+        userUseCase.save(userModel);
+
+        assertEquals("password", userModel.getPassword());
+        assertEquals(roleModel1, userModel.getRole());
+        verify(userPersistencePort, times(1)).save(userModel);
+        verify(restaurantFeignClientPort, never()).saveRestaurantEmployee(anyLong(), anyLong());
+    }
 
 
     @Test

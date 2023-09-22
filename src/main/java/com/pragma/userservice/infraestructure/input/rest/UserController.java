@@ -27,7 +27,7 @@ public class UserController {
 
     @Operation(summary = "Add a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created", content = @Content),
+            @ApiResponse(responseCode = "201", description = "User (owner, employee and customer) created", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request: wrong input data", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception"))),
             @ApiResponse(responseCode = "404", description = "Role not found, owner does not have a restaurant", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception"))),
             @ApiResponse(responseCode = "409", description = "Conflict: age not allowed, user already exists, operation not allowed, feign exception", content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Exception")))

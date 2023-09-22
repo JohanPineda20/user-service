@@ -17,7 +17,7 @@ public class UserRequest {
     private String name;
     private String lastname;
     @NotBlank(message = "document number cannot be empty")
-    @Pattern(regexp = "^[0-9]+$", message = "document number must be numerical only")
+    @Pattern(regexp = "^[0-9]{10}$", message = "document number must have exactly 10 numerical characters")
     private String documentNumber;
     @NotBlank(message = "cellphone cannot be empty")
     @Pattern(regexp = "^\\+?[0-9]{1,12}$", message = "cellphone is invalid")
