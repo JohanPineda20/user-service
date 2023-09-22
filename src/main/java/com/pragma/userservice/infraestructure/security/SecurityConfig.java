@@ -30,7 +30,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.
-                        requestMatchers("/auth/login", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "v2/api-docs/**").permitAll()
+                        requestMatchers("/auth/login", "/user", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "v2/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(se -> se.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)

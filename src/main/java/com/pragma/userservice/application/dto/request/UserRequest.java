@@ -1,6 +1,7 @@
 package com.pragma.userservice.application.dto.request;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,6 @@ public class UserRequest {
     private String email;
     @NotBlank(message = "password cannot be empty")
     private String password;
+    @Min(value = 1, message = "role_id must be a positive number")
+    private Long roleId;
 }

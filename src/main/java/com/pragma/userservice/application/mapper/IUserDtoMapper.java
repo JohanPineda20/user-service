@@ -13,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 public interface IUserDtoMapper {
     @Mapping(target = "birthdate", source = "birthdate",
             dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "role.id", source = "roleId")
     UserModel mapToUserModel(UserRequest userRequest);
 
     @Mapping(target = "role", source = "role.name")

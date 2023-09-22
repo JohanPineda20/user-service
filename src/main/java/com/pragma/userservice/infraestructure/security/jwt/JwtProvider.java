@@ -58,4 +58,30 @@ public class JwtProvider {
             return null;
         }
     }
+    public static String getRolFromToken(String token){
+        try{
+            return Jwts.parserBuilder()
+                    .setSigningKey(JWT_SECRET_KEY.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("rol", String.class);
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+    public static Long getIdFromToken(String token){
+        try{
+            return Jwts.parserBuilder()
+                    .setSigningKey(JWT_SECRET_KEY.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("id", Long.class);
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 }

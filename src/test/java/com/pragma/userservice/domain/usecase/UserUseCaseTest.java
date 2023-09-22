@@ -5,9 +5,8 @@ import com.pragma.userservice.domain.exception.DataNotFoundException;
 import com.pragma.userservice.domain.exception.DomainException;
 import com.pragma.userservice.domain.model.RoleModel;
 import com.pragma.userservice.domain.model.UserModel;
-import com.pragma.userservice.domain.spi.IPasswordEncryptionPort;
-import com.pragma.userservice.domain.spi.IRolePersistencePort;
-import com.pragma.userservice.domain.spi.IUserPersistencePort;
+import com.pragma.userservice.domain.spi.*;
+import feign.FeignException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,19 +32,125 @@ class UserUseCaseTest {
     @Mock
     IPasswordEncryptionPort passwordEncryptionPort;
 
+    @Mock
+    ISecurityContextPort securityContextPort;
+    @Mock
+    IRestaurantFeignClientPort restaurantFeignClientPort;
+
     @Test
-    void save() {
+    void saveOwner() {
         UserModel userModel = createExampleUser();
-        RoleModel roleModel = createExampleRole(2L);
-        when(rolePersistencePort.findById(2L)).thenReturn(roleModel);
+        userModel.setRole(new RoleModel());
+        RoleModel roleModel1 = createExampleRole(2L);
         when(passwordEncryptionPort.encode(userModel.getPassword())).thenReturn("password");
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("ADMIN");
+        when(rolePersistencePort.findById(2L)).thenReturn(roleModel1);
 
         userUseCase.save(userModel);
 
         assertEquals("password", userModel.getPassword());
-        assertEquals(roleModel, userModel.getRole());
+        assertEquals(roleModel1, userModel.getRole());
         verify(userPersistencePort, times(1)).save(userModel);
     }
+
+    @Test
+    void saveOwnerNotAllowed() {
+        UserModel userModel = createExampleUser();
+        userModel.setRole(new RoleModel());
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("CUSTOMER");
+        when(rolePersistencePort.findById(2L)).thenReturn(any());
+
+        assertThrows(DomainException.class, ()->userUseCase.save(userModel));
+        verify(userPersistencePort, never()).save(userModel);
+    }
+
+    @Test
+    void saveEmployee() {
+        RoleModel roleModel = new RoleModel();
+        roleModel.setId(3L);
+        UserModel userModel = createExampleUser();
+        userModel.setRole(roleModel);
+        RoleModel roleModel1 = createExampleRole(3L);
+        when(passwordEncryptionPort.encode(userModel.getPassword())).thenReturn("password");
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("OWNER");
+        when(rolePersistencePort.findById(3L)).thenReturn(roleModel1);
+        UserModel userModel1 = createExampleUser();
+        userModel1.setId(1L);
+        when(userPersistencePort.save(userModel)).thenReturn(userModel1);
+        when(securityContextPort.getIdFromSecurityContext()).thenReturn(1L);
+
+        userUseCase.save(userModel);
+
+        assertEquals("password", userModel.getPassword());
+        assertEquals(roleModel1, userModel.getRole());
+        verify(userPersistencePort, times(1)).save(userModel);
+        verify(restaurantFeignClientPort, times(1)).saveRestaurantEmployee(1L, userModel1.getId());
+    }
+
+    @Test
+    void saveEmployeeNotAllowed() {
+        RoleModel roleModel = new RoleModel();
+        roleModel.setId(3L);
+        UserModel userModel = createExampleUser();
+        userModel.setRole(roleModel);
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("ADMIN");
+        when(rolePersistencePort.findById(3L)).thenReturn(any());
+        UserModel userModel1 = createExampleUser();
+        userModel1.setId(1L);
+        when(userPersistencePort.save(userModel)).thenReturn(userModel1);
+        when(securityContextPort.getIdFromSecurityContext()).thenReturn(1L);
+
+        assertThrows(DomainException.class, ()->userUseCase.save(userModel));
+        verify(userPersistencePort, never()).save(userModel);
+        verify(restaurantFeignClientPort, never()).saveRestaurantEmployee(1L, userModel1.getId());
+    }
+
+    @Test
+    void saveEmployeeFeignExceptionNotFound() {
+        RoleModel roleModel = new RoleModel();
+        roleModel.setId(3L);
+        UserModel userModel = createExampleUser();
+        userModel.setRole(roleModel);
+        RoleModel roleModel1 = createExampleRole(3L);
+        when(passwordEncryptionPort.encode(userModel.getPassword())).thenReturn("password");
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("OWNER");
+        when(rolePersistencePort.findById(3L)).thenReturn(roleModel1);
+        UserModel userModel1 = createExampleUser();
+        userModel1.setId(1L);
+        when(userPersistencePort.save(userModel)).thenReturn(userModel1);
+        when(securityContextPort.getIdFromSecurityContext()).thenReturn(1L);
+        doThrow(FeignException.NotFound.class).when(restaurantFeignClientPort).saveRestaurantEmployee(1L, userModel1.getId());
+
+        assertThrows(DataNotFoundException.class ,()->userUseCase.save(userModel));
+        assertEquals("password", userModel.getPassword());
+        assertEquals(roleModel1, userModel.getRole());
+        verify(userPersistencePort, times(1)).save(userModel);
+        verify(restaurantFeignClientPort, times(1)).saveRestaurantEmployee(1L, userModel1.getId());
+    }
+
+    @Test
+    void saveEmployeeFeignException() {
+        RoleModel roleModel = new RoleModel();
+        roleModel.setId(3L);
+        UserModel userModel = createExampleUser();
+        userModel.setRole(roleModel);
+        RoleModel roleModel1 = createExampleRole(3L);
+        when(passwordEncryptionPort.encode(userModel.getPassword())).thenReturn("password");
+        when(securityContextPort.getRolFromSecurityContext()).thenReturn("OWNER");
+        when(rolePersistencePort.findById(3L)).thenReturn(roleModel1);
+        UserModel userModel1 = createExampleUser();
+        userModel1.setId(1L);
+        when(userPersistencePort.save(userModel)).thenReturn(userModel1);
+        when(securityContextPort.getIdFromSecurityContext()).thenReturn(1L);
+        doThrow(FeignException.class).when(restaurantFeignClientPort).saveRestaurantEmployee(1L, userModel1.getId());
+
+        assertThrows(DomainException.class ,()->userUseCase.save(userModel));
+        assertEquals("password", userModel.getPassword());
+        assertEquals(roleModel1, userModel.getRole());
+        verify(userPersistencePort, times(1)).save(userModel);
+        verify(restaurantFeignClientPort, times(1)).saveRestaurantEmployee(1L, userModel1.getId());
+    }
+
 
     @Test
     void saveUserAlreadyExists() {

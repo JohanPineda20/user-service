@@ -7,7 +7,7 @@ public interface IUserPersistencePort {
 
     boolean existsByEmail(String email);
 
-    void save(UserModel userModel);
+    UserModel save(UserModel userModel);
 
     UserModel findById(Long id);
 }
